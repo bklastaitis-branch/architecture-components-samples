@@ -26,8 +26,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.example.android.navigationsample.MainActivity">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:name=".MyApplication">
+        <activity android:name="com.example.android.navigationsample.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,7 +37,30 @@
             </intent-filter>
             <!-- This is added to handle a deep link -->
             <nav-graph android:value="@navigation/navigation" />
+            <!-- Branch URI Scheme -->
+            <intent-filter>
+                <data android:scheme="bncfragment" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
+            <!-- Branch App Links (optional) -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="zhlr8.app.link" />
+                <!-- example-alternate domain is required for App Links when the Journeys/Web SDK and Deepviews are used inside your website.  -->
+                <data android:scheme="https" android:host="zhlr8-alternate.app.link" />
+            </intent-filter>
         </activity>
+
+
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_phMVtTTVfziGov45xq8hdekpxBhGngTu" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="secret_live_TGn28EsIxOvckwA0ooCDNbXorOMjUCVJ" />
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
+
     </application>
 
 </manifest>

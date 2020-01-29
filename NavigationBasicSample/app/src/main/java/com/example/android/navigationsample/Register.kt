@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.Navigation
+import io.branch.referral.PrefHelper
 
 
 /**
@@ -33,6 +34,7 @@ class Register : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
+        PrefHelper.Debug("Register.onCreateView")
         val view = inflater.inflate(R.layout.fragment_register, container, false)
 
         view.findViewById<Button>(R.id.signup_btn).setOnClickListener {

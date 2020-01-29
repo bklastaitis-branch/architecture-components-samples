@@ -16,8 +16,14 @@
 
 package com.example.android.navigationsample
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import io.branch.referral.Branch
+import io.branch.referral.BranchError
+import io.branch.referral.PrefHelper
+import org.json.JSONObject
 
 /**
  * An activity that inflates a layout that has a NavHostFragment.
@@ -27,5 +33,34 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        PrefHelper.Debug("onStart")
+        Branch.getInstance().initSession({ referringParams: JSONObject?, error: BranchError? ->
+            PrefHelper.Debug("onStart, onInitFinished: referringParams = $referringParams, error = $error")
+            if (error == null) {
+
+                // takes referringParams and runs code like this:
+//                val eventHubArgs = EventHubFragmentArgs.Builder(event)
+//                        .setStreamId(streamId)
+//                        .build().toBundle()
+                val eventHubArgs = Bundle()
+                findNavController(R.id.my_nav_host_fragment).createDeepLink()
+                        .setDestination(R.id.register)
+                        .setArguments(eventHubArgs)
+                        .createTaskStackBuilder()
+                        .startActivities()
+            }
+        }, this)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        this.intent = intent
+        PrefHelper.Debug("onNewIntent, intent = $intent")
+        // Branch reinit (in case Activity is already in foreground when Branch link is clicked)
+//        Branch.getInstance().reInitSession(this, branchListener)
     }
 }

@@ -24,7 +24,7 @@ android {
     compileSdkVersion build_versions.target_sdk
     defaultConfig {
         applicationId "com.example.android.navigationsample"
-        minSdkVersion build_versions.min_sdk
+        minSdkVersion 16
         targetSdkVersion build_versions.target_sdk
         versionCode 1
         versionName "1.0"
@@ -69,6 +69,12 @@ dependencies {
     implementation deps.material
     implementation deps.constraint_layout
     implementation deps.core_ktx
+
+    implementation 'io.branch.sdk.android:library:4.3.1'
+    // required if your app is in the Google Play Store (tip: avoid using bundled play services libs)
+    implementation 'com.google.firebase:firebase-appindexing:19.0.0' // App indexing
+    implementation 'com.google.android.gms:play-services-ads:16+' // GAID matching
+    implementation 'com.android.support:customtabs:28.0.0'
 
     implementation deps.lifecycle.viewmodel_ktx
 
