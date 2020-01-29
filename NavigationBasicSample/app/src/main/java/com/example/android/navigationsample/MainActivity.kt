@@ -35,25 +35,31 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
+    private val function: (JSONObject?, BranchError?) -> Unit
+        get() {
+            val bnclistener = { referringParams: JSONObject?, error: BranchError? ->
+                PrefHelper.Debug("onStart, onInitFinished: referringParams = $referringParams, error = $error")
+                if (error == null) {
+
+                    // takes referringParams and runs code like this:
+    //                val eventHubArgs = EventHubFragmentArgs.Builder(event)
+    //                        .setStreamId(streamId)
+    //                        .build().toBundle()
+                    val eventHubArgs = Bundle()
+                    findNavController(R.id.my_nav_host_fragment).createDeepLink()
+                            .setDestination(R.id.register)
+                            .setArguments(eventHubArgs)
+                            .createTaskStackBuilder()
+                            .startActivities()
+                }
+            }
+            return bnclistener
+        }
+
     override fun onStart() {
         super.onStart()
         PrefHelper.Debug("onStart")
-        Branch.getInstance().initSession({ referringParams: JSONObject?, error: BranchError? ->
-            PrefHelper.Debug("onStart, onInitFinished: referringParams = $referringParams, error = $error")
-            if (error == null) {
-
-                // takes referringParams and runs code like this:
-//                val eventHubArgs = EventHubFragmentArgs.Builder(event)
-//                        .setStreamId(streamId)
-//                        .build().toBundle()
-                val eventHubArgs = Bundle()
-                findNavController(R.id.my_nav_host_fragment).createDeepLink()
-                        .setDestination(R.id.register)
-                        .setArguments(eventHubArgs)
-                        .createTaskStackBuilder()
-                        .startActivities()
-            }
-        }, this)
+        Branch.getInstance().initSession(function, this)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -61,6 +67,6 @@ class MainActivity : AppCompatActivity() {
         this.intent = intent
         PrefHelper.Debug("onNewIntent, intent = $intent")
         // Branch reinit (in case Activity is already in foreground when Branch link is clicked)
-//        Branch.getInstance().reInitSession(this, branchListener)
+        Branch.getInstance().reInitSession(this, function)
     }
 }
